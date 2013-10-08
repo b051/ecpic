@@ -1,19 +1,12 @@
 
 exports.entrances = [
-  'cmpid=nim_ppc_246213&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-24728d7271198c48.3588ac43e9db7ea7'
-  'cmpid=nim_ppc_246234&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-12-efe17ae0251dace2.2ce36dee8e973899'
-  'cmpid=nim_ppc_580789&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-1c45d04cad126e90.e6f0db6d577cf2e7'
-  'cmpid=nim_ppc_084814&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-6c545454b2652db8.a3eabf925f8ef69a'
-  'cmpid=nim_ppc_087451&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-73b1dcdc9f6062d0.6af121192806e7e6'
   'cmpid=nim_ppc_022246&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-e3b7ad4540ebf10f.4516ad5522ead133'
-  'cmpid=nim_ppc_019250&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-12-b3898ca0a08025da.cb87270f6a9c2d9c'
   'cmpid=nim_ppc_028277&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-12-427bbb1815de2643.d3b7419b16d6391d'
-  'cmpid=nim_ppc_090918&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-12-027d10bf31c36274.9e13703e5f980998'
+  'cmpid=nim_ppc_084814&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-6c545454b2652db8.a3eabf925f8ef69a'
   'cmpid=nim_ppc_086923&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-2259c4d4a7d3cf12.9f6e2739b207d7d1'
-  'cmpid=nim_ppc_581046&ag_kwid=334-32-fa51f056274e4410.057dd24af0568914'
-  'cmpid=nim_bd_000164'
-  'cmpid=nim_bd_000147'
-  'cmpid=nim_bd_000210'
+  'cmpid=nim_ppc_246142&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-fc2eec580af595c5.140b643a9583eea5'
+  'cmpid=nim_ppc_246213&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-24728d7271198c48.3588ac43e9db7ea7'
+  'cmpid=nim_ppc_580789&src=Baidu&medium=PPC&Network={mediatype}&kw={keywordid}&ad={creative}&site={placement}&ag_kwid=334-10-1c45d04cad126e90.e6f0db6d577cf2e7'
 ].map (path) -> "http://www.ecpic.com.cn/cpicmall/fastCalculation_cpic/CpicFastCalculation.jsp?#{path}"
 
 exports.cities =
