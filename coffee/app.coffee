@@ -1,27 +1,5 @@
 express = require 'express'
-if process?.env?.LOGENTRIES_TOKEN
-  _log = require('node-logentries').logger
-    token:process.env.LOGENTRIES_TOKEN
-  log = 
-    debug: ->
-      _log.debug arguments...
-      console.log arguments...
-    err: ->
-      _log.err arguments...
-      console.error arguments...
-    info: ->
-      _log.info arguments...
-      console.log arguments...
-    log: ->
-      _log.log arguments...
-      console.log arguments...
-  console.log "logged to logentries"
-else
-  log =
-    debug: console.log
-    err: console.error
-    info: console.info
-    log: console.log
+log = require './log'
 
 {Ecpic, QQ} = require './form'
 {Cookie, CookieJar} = require './cookie'
@@ -107,7 +85,7 @@ class Scheduler
   
   reset: ->
     if not Parse.User.current()
-      console.log "start login..."
+      log.log "start login..."
       return login =>
         @reset()
     return if @resetting
@@ -288,7 +266,7 @@ app.get '/export/:date', (req, res) ->
 #ifndef CloudCode
 port = process.env.PORT or 3000
 server.listen port, ->
-  console.log "Listening on #{port}"
+  log.debug "Listening on #{port}"
   # scheduler2 = new Scheduler
   #   task: QQ
   #   queryDateCount: queries.queryQQDateCount
