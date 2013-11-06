@@ -11,7 +11,8 @@
     "request": "2.x",
     "underscore": "~1.5.1",
     "coffee-script": "1.6.3",
-    "node-logentries": "~0.1.0"
+    "node-logentries": "~0.1.0",
+    "iconv-lite": "~0.2.11"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

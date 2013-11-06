@@ -1,24 +1,32 @@
 #ifndef CloudCode
 request = require 'request'
+{Cookie, CookieJar} = require './cookie'
+iconv = require 'iconv-lite'
 #endif
 _ = require 'underscore'
-{Cookie, CookieJar} = require './cookie'
-{entrances, cities} = require './metadata'
+{cities} = require './metadata'
 {queryOwners, scheduleCount, queryDateCount} = require './shared/queries'
 
 user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1"
 
 class Task
   
+  encoding: 'utf-8'
+  debug: no
+  
   constructor: (@owner, cb) ->
     @jar = new CookieJar
-    @entrance = @prepare()
+    @entrance = @prepare?()
     
     _setupOptions = (options) =>
+      options.encoding = null
+      if @debug
+        options.proxy = "http://10.0.1.8:8888"
       options.headers ?= {}
-      _.extend options.headers,
-        'User-Agent': user_agent
-        'Cookie': @jar.cookieString()
+      options.headers['User-Agent'] = user_agent
+      cookie = @jar.cookieString()
+      if cookie
+        options.headers['Cookie'] = cookie
     
     _saveCookie = (res) =>
       cookies = res.headers['Set-Cookie']
@@ -31,13 +39,17 @@ class Task
     
     if request?
       @request = (options, callback) =>
+        if typeof options isnt 'object'
+          options = url: options
         _setupOptions(options)
         
-        request options, (error, res, body) ->
+        request options, (error, res, body) =>
           if not error
             _saveCookie(res)
-          callback?(error, res, body)
-        
+          
+          console.log @encoding
+          callback? error, res, iconv.decode(body, @encoding)
+    
     else
       @request = (options, callback) =>
         if options.form
@@ -53,9 +65,9 @@ class Task
             callback?(code: res.status, res)
         Parse.Cloud.httpRequest options
     
-    @emulate(cb) if cb
+    @emulate?(cb) if cb
   
-  city: ->
+  citycodes: ->
     area = @owner.get('area')
     for city, codes of cities
       if area is city or area.search(city) >= 0 or city.search(area) >= 0
@@ -66,9 +78,5 @@ class Task
   toJSON: ->
     cookies: @jar.cookies.map (cookie) -> cookie.toString()
     form: @form
-  
-  emulate: (cb) ->
-  prepare: ->
-    
 
 module.exports = Task

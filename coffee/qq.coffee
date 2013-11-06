@@ -1,11 +1,11 @@
 Task = require './task'
+{Cookie, CookieJar} = require './cookie'
 
 class QQ extends Task
   
   skey: "@yu0m1qD8w"
   
   prepare: ->
-    citycodes = @city()
     @form =
       city: citycodes[1]
       carnum: @owner.get('car_number')
@@ -27,6 +27,7 @@ class QQ extends Task
     hash & 0x7fffffff
   
   emulate: (cb) ->
+    
     @form.g_tk = @getToken()
     @request
       url: "http://chinadrivers.act.qq.com/act/saveuserinfo"

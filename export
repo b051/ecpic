@@ -3,8 +3,8 @@
 {print} = require 'sys'
 fs = require 'fs'
 
-fromDate = new Date 2013, 8, 1
-toDate = new Date 2013, 9, 1
+fromDate = new Date 2013, 6, 28
+toDate = new Date 2013, 7, 1
 
 csv = (d) ->
   date = "#{d.getFullYear()}-#{d.getMonth() + 1}-#{d.getDate()}"

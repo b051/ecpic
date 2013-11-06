@@ -1,4 +1,5 @@
 Task = require './task'
+{entrances} = require './metadata'
 
 class Ecpic extends Task
 
@@ -20,7 +21,7 @@ class Ecpic extends Task
       sourceName: ''
       cmPid: pid
     
-    codes = @city()
+    codes = @citycodes()
     form.provinceCode = codes[0]
     form.cityCode = codes[1]
     @form = form

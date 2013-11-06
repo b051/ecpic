@@ -1,8 +1,6 @@
 express = require 'express'
 log = require './log'
 
-Ecpic = require './ecpic'
-QQ = require './qq'
 Scheduler = require './scheduler'
 queries = require './shared/queries'
 
@@ -79,12 +77,13 @@ port = process.env.PORT or 3000
 server.listen port, ->
   log.debug "Listening on #{port}"
   # scheduler2 = new Scheduler
-  #   task: QQ
+  #   task: require './qq'
   #   queryDateCount: queries.queryQQDateCount
   #   scheduleCount: -> 1020
   
-  scheduler = new Scheduler
-    task: Ecpic
-    scheduleCount: queries.scheduleCount
-    queryDateCount: queries.queryDateCount
+  # scheduler = new Scheduler
+  #   task: require './ecpic'
+  #   scheduleCount: queries.scheduleCount
+  #   queryDateCount: queries.queryDateCount
+
 #endifapp.listen()
