@@ -8,6 +8,8 @@ option '-d', '--date [yyyy-MM-dd]', 'export from date'
 option '-f', '--file', 'upload file'
 
 task 'csv', 'export CSV file from date', (options) ->
+  console.log options
+  return
   date = options.arguments[0]
   Parse.Cloud.run 'export', date: date,
     success: (json) ->
@@ -47,7 +49,38 @@ login = (cb)->
     error: (error) ->
       console.log error
 
-task 'count', (options) ->
+task 'reset', (options) ->
+  login ->
+    new Parse.Query("CarOwner").startsWith('track', 'tracked by').find
+      success: (results) ->
+        results.forEach (result) ->
+          result.unset('track')
+          result.save(null)
+        console.log results.length
+      error: (error) ->
+        console.error error
+
+task 'used', (options) ->
+  login ->
+    query = new Parse.Query("CarOwner")
+    query.exists('used')
+    query.count
+      success: (count) ->
+        console.log count
+      error: (error) ->
+        console.log error
+
+task 'tracked', (options) ->
+  login ->
+    query = new Parse.Query("CarOwner")
+    query.exists('track')
+    query.count
+      success: (count) ->
+        console.log count
+      error: (error) ->
+        console.log error
+
+task 'unused', (options) ->
   login ->
     query = new Parse.Query("CarOwner")
     query.doesNotExist('used')
