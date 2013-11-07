@@ -82,8 +82,6 @@ server.listen port, ->
     min_speed: 0.2
     speed_factor: 1
     cls: 'CarOwner2'
-    queryPick: (cb) ->
-      
     scheduleCount: -> 300
     queryDateCount: (date, callback) ->
       queries.queryDateCount 'CarOwner2', date, null, callback

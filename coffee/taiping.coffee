@@ -467,6 +467,10 @@ class Taiping extends Task
   host: "http://che.cntaiping.com/"
   
   prepare: ->
+    @bean = @area()
+    if not bean
+      throw new Error "no such city #{@owner.get('city')} of #{@owner.get('province')}"
+    
     entrance = "#{@host}vehicleQuickQuote!landingloadinit.action?channel=tponline-WX-zhongyi&medium=che-eMall-AFFLT-zhongyi-lp-banner"
   
   area: ->
@@ -485,11 +489,6 @@ class Taiping extends Task
         return bean
   
   emulate: (cb) ->
-    bean = @area()
-    if not bean
-      console.log "no such city #{@owner.get('city')} of #{@owner.get('province')}"
-      return cb? null, null, 1
-    
     @request @entrance, (err, res, body) =>
       extraInfo =
         buyDate: "#{@owner.get('first_year')}-#{@owner.get('first_month')}"
@@ -498,7 +497,7 @@ class Taiping extends Task
         automobileNumber: @owner.get('car_number')
       
       form = {}
-      for b in [bean, extraInfo, hiddenForm]
+      for b in [@bean, extraInfo, hiddenForm]
         for k, v of b
           form["quoteBean.#{k}"] = v
       

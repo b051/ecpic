@@ -154,7 +154,9 @@ class Scheduler
       return login =>
         @pick()
     @_pick (error, data) =>
-      if not error
+      if error
+        @pick()
+      else
         @count.used += 1
         return if @ignoreReset is yes
         if @count.used - @count.used_real > @config.reset_every_n_pick or @count.used >= @count.scheduled
