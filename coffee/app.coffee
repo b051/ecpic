@@ -79,6 +79,7 @@ server.listen port, ->
   scheduler = new Scheduler
     task: require './taiping'
     end_hour: 22
+    min_speed: 0.2
     speed_factor: 1
     scheduleCount: -> 300
     queryDateCount: (date, callback) ->
