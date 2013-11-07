@@ -506,9 +506,11 @@ class Taiping extends Task
         url: "#{@host}vehicleQuickQuote.action"
         form: form
       , (err, res, body) =>
+        if err
+          return cb? null, null, err
         json = JSON.parse(body).jsonResult
         if json
-          cb? "#{json.length}", 'che', 0
+          cb? "sucess", 'che', null
         else
           cb? null, null, 1
 
