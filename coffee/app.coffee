@@ -78,6 +78,8 @@ server.listen port, ->
   log.debug "Listening on #{port}"
   scheduler = new Scheduler
     task: require './taiping'
+    end_hour: 22
+    speed_factor: 1
     scheduleCount: -> 300
     queryDateCount: (date, callback) ->
       queries.queryDateCount 'CarOwner2', date, null, callback
