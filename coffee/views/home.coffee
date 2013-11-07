@@ -69,7 +69,7 @@ App.HomeView = Parse.View.extend
   
   render: ->
     # @stats.on('countUpdate', @resetTimeClock.bind @)
-    @collection = queryOwners().collection()
+    @collection = queryOwners("CarOwner").collection()
     @collection.on('all', @_render.bind @)
     @$el.html '<h4>Loading...</h4>'
     @collection.fetch

@@ -463,7 +463,6 @@ hiddenForm =
 
 class Taiping extends Task
   
-  encoding: 'utf-8'
   # debug: true
   host: "http://che.cntaiping.com/"
   
@@ -486,10 +485,12 @@ class Taiping extends Task
         return bean
   
   emulate: (cb) ->
+    bean = @area()
+    if not bean
+      console.log "no such city #{@owner.get('city')} of #{@owner.get('province')}"
+      return cb? null, null, 1
+    
     @request @entrance, (err, res, body) =>
-      bean = @area()
-      return cb?() if not bean
-      
       extraInfo =
         buyDate: "#{@owner.get('first_year')}-#{@owner.get('first_month')}"
         price: @owner.get('price')
@@ -515,7 +516,7 @@ class Taiping extends Task
           cb? null, null, 1
 
 module.exports = Taiping
-
+# 
 # fn = (a, b, c) ->
 #   console.log a, b, c
 # 

@@ -6,22 +6,22 @@ else
   _localParse = Parse
 #endif_localParse = Parse
 
-queryOwners = ->
+queryOwners = (cls) ->
   now = new Date()
   now = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (now.getUTCHours() >= 16))
   month = now.getMonth()
   date = now.getDate()
   
-  thisMonth = new _localParse.Query("CarOwner")
+  thisMonth = new _localParse.Query(cls)
   thisMonth.equalTo 'first_month', month + 1
   thisMonth.lessThan 'first_day', date
   thisMonth.ascending 'first_day'
   
-  lastMonth = new _localParse.Query("CarOwner")
+  lastMonth = new _localParse.Query(cls)
   lastMonth.lessThanOrEqualTo 'first_month', (month + 11) % 12 + 1
   lastMonth.descending 'first_day'
   
-  query = Parse.Query.or thisMonth, lastMonth, new Parse.Query("CarOwner")
+  query = Parse.Query.or thisMonth, lastMonth, new Parse.Query(cls)
   query.doesNotExist "track"
 
 _dateQuery = (cls, date) ->

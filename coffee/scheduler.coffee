@@ -16,6 +16,7 @@ class Scheduler
       max_speed: 10
       min_speed: 1
       reset_every_n_pick: 50
+      cls: 'CarOwner'
     
     if not @config.start_hour
       @config.start_hour = config.start_hour
@@ -137,7 +138,7 @@ class Scheduler
     @clock = setInterval @pick.bind(@), 60000 / (speed or @speed)
   
   _pick: (cb) ->
-    Parse.Cloud.run 'pick', null, 
+    Parse.Cloud.run 'pick', cls: @config.cls, 
       success: (owner) =>
         @emulate owner, (error, data) ->
           log.err error if error
