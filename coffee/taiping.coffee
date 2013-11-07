@@ -468,7 +468,7 @@ class Taiping extends Task
   
   prepare: ->
     @bean = @area()
-    if not bean
+    if not @bean
       throw new Error "no such city #{@owner.get('city')} of #{@owner.get('province')}"
     
     entrance = "#{@host}vehicleQuickQuote!landingloadinit.action?channel=tponline-WX-zhongyi&medium=che-eMall-AFFLT-zhongyi-lp-banner"
