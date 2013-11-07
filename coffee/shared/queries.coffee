@@ -24,8 +24,8 @@ queryOwners = ->
   query = Parse.Query.or thisMonth, lastMonth, new Parse.Query("CarOwner")
   query.doesNotExist "track"
 
-_dateQuery = (date) ->
-  query = new _localParse.Query("CarOwner")
+_dateQuery = (cls, date) ->
+  query = new _localParse.Query(cls)
   query.exists('nimpid')
   fromDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0))
   toDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0))
@@ -33,9 +33,9 @@ _dateQuery = (date) ->
   query.lessThan('used', toDate)
   query
 
-queryDateCount = (date, callback) ->
-  query = _dateQuery(date)
-  query.notEqualTo 'nimpid', 'qq'
+queryDateCount = (cls, date, condition, callback) ->
+  query = _dateQuery(cls, date)
+  condition?query
   
   query.count
     success: (count) ->
@@ -43,16 +43,15 @@ queryDateCount = (date, callback) ->
     error: (error) ->
       callback?(query, 0, error)
 
+queryEcpicCount = (date, callback) ->
+  queryDateCount 'CarOwner', date, (query) ->
+    query.notEqualTo 'nimpid', 'qq'
+  , callback
 
 queryQQDateCount = (date, callback) ->
-  query = _dateQuery(date)
-  query.equalTo 'nimpid', 'qq'
-  query.count
-    success: (count) ->
-      callback?(query, count, null)
-    error: (error) ->
-      callback?(query, 0, error)
-
+  queryDateCount 'CarOwner', date, (query) ->
+    query.equalTo 'nimpid', 'qq'
+  , callback
 
 scheduleCount = (date) ->
   days = (date.getTime() - date.getTimezoneOffset() * 60000) / 86400000 - 15873

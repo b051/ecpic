@@ -5,7 +5,6 @@ iconv = require 'iconv-lite'
 #endif
 _ = require 'underscore'
 {cities} = require './metadata'
-{queryOwners, scheduleCount, queryDateCount} = require './shared/queries'
 
 user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1"
 
@@ -17,6 +16,7 @@ class Task
   constructor: (@owner, cb) ->
     @jar = new CookieJar
     @entrance = @prepare?()
+    @_referer = null
     
     _setupOptions = (options) =>
       options.encoding = null
@@ -24,6 +24,7 @@ class Task
         options.proxy = "http://10.0.1.8:8888"
       options.headers ?= {}
       options.headers['User-Agent'] = user_agent
+      options.headers['Referer'] = @_referer if @_referer
       cookie = @jar.cookieString()
       if cookie
         options.headers['Cookie'] = cookie
@@ -44,10 +45,9 @@ class Task
         _setupOptions(options)
         
         request options, (error, res, body) =>
+          @_referer = options.url
           if not error
             _saveCookie(res)
-          
-          console.log @encoding
           callback? error, res, iconv.decode(body, @encoding)
     
     else

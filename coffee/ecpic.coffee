@@ -49,8 +49,6 @@ class Ecpic extends Task
       url: Ecpic.step1_url
       method: 'POST'
       form: @form
-      headers:
-        'Referer': @entrance
     , (error, res, body) =>
       if body
         @prepare2(body)
@@ -61,8 +59,6 @@ class Ecpic extends Task
       url: Ecpic.step2_url
       method: 'POST'
       form: @form
-      headers:
-        'Referer': Ecpic.step1_url
     , (error, res, body) ->
       callback?(error)
   

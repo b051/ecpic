@@ -76,14 +76,10 @@ app.get '/use/:owner', (req, res) ->
 port = process.env.PORT or 3000
 server.listen port, ->
   log.debug "Listening on #{port}"
-  # scheduler2 = new Scheduler
-  #   task: require './qq'
-  #   queryDateCount: queries.queryQQDateCount
-  #   scheduleCount: -> 1020
-  
-  # scheduler = new Scheduler
-  #   task: require './ecpic'
-  #   scheduleCount: queries.scheduleCount
-  #   queryDateCount: queries.queryDateCount
+  scheduler = new Scheduler
+    task: require './taiping'
+    scheduleCount: -> 300
+    queryDateCount: (date, callback) ->
+      queries.queryDateCount 'CarOwner2', date, null, callback
 
 #endifapp.listen()
