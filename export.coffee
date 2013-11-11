@@ -3,8 +3,8 @@
 {print} = require 'sys'
 fs = require 'fs'
 
-fromDate = new Date 2013, 6, 28
-toDate = new Date 2013, 7, 1
+fromDate = new Date 2013, 10, 7
+toDate = new Date 2013, 10, 8
 
 csv = (d) ->
   date = "#{d.getFullYear()}-#{d.getMonth() + 1}-#{d.getDate()}"
@@ -14,9 +14,10 @@ csv = (d) ->
   fs.exists filename, (exists) ->
     return if exists
     console.log "downloading #{filename}..."
-    Parse.Cloud.run 'export', date: date,
+    Parse.Cloud.run 'export_taiping', date: date,
       success: (json) ->
-        csv = json.map((arr) -> "#{arr[0]},#{arr[1]},#{arr[2]},#{arr[3].toJSON()}").join('\n')
+        # csv = json.map((arr) -> "#{arr[0]},#{arr[1]},#{arr[2]},#{arr[3].toJSON()}").join('\n')
+        csv = json.map((arr) -> "#{arr[0]},#{arr[1]}").join('\n')
         fs.writeFile filename, csv
         console.log "#{filename} downloaded"
     
