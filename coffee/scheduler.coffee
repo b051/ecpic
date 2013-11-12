@@ -1,4 +1,5 @@
 {Parse} = require('./shared/parse')
+queries = require './shared/queries'
 log = require './log'
 
 login = (cb)->
@@ -17,6 +18,7 @@ class Scheduler
       min_speed: 1
       reset_every_n_pick: 50
       cls: 'CarOwner'
+      condition: null
     
     if not @config.start_hour
       @config.start_hour = config.start_hour
@@ -90,8 +92,7 @@ class Scheduler
     
     @count.scheduled = @config.scheduleCount(new Date())
     notify()
-    
-    @config.queryDateCount new Date(), (q, count) =>
+    queries.queryDateCount @config.cls, date, @config.condition, (q, count) =>
       @count.used_real = @count.used = count
       notify()
     @

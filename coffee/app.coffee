@@ -85,7 +85,5 @@ server.listen port, ->
     speed_factor: 1
     cls: 'CarOwner2'
     scheduleCount: -> 2000
-    queryDateCount: (date, callback) ->
-      queries.queryDateCount 'CarOwner2', date, null, callback
 
 #endifapp.listen()
