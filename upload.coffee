@@ -32,11 +32,14 @@ upload = (file) ->
         first_year: year
         first_date: new Date(year, month - 1, day)
     
+    objects.reverse()
+    
     pop = ->
       object = objects.pop()
       return if not object
       
       query = new Parse.Query(CarOwner)
+      query.equalTo 'car_number', object.car_number
       query.find().then (results) ->
         if results.length is 0
           return Parse.Promise.as('save')
@@ -75,4 +78,6 @@ upload = (file) ->
     for i in [0...threads]
       pop()
 
-upload("ecpic2.csv")
+# upload("e3.csv")
+
+# 陕A0T030
