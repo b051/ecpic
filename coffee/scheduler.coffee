@@ -123,10 +123,23 @@ class Scheduler
         return @next()
     else
       @ignoreReset = no
-      timeLeft = @config.end_hour * 60 - mins
-      _speed = remain / timeLeft
-      if _speed < 0
-        _speed = @config.max_speed / @config.speed_factor
+      if @config.hot_hours
+        _minOffset = 1440
+        _minOffsetHour = 0
+        for hour in @config.hot_hours
+          offset = hour * 60 - mins
+          if Math.abs(_minOffset) >= Math.abs(offset)
+            _minOffset = offset
+            _minOffsetHour = hour
+        topBar = remain / @config.hot_hours.length / (2 * Math.PI)
+        ratio = (Math.cos(Math.max(Math.min(_minOffset / 60, 1), -1) * Math.PI) + 1) / 2
+        _speed = topBar * ratio
+        console.log _speed
+      else
+        timeLeft = @config.end_hour * 60 - mins
+        _speed = remain / timeLeft
+        if _speed < 0
+          _speed = @config.max_speed / @config.speed_factor
       speed = Math.max(_speed * @config.speed_factor, @config.min_speed)
     if @speed isnt speed
       @speed = speed

@@ -64,7 +64,6 @@ task 'reset', (options) ->
     total = 0
     resetLoop = ->
       reset (num) ->
-        console.log num
         total += num
         if num is 100
           resetLoop()
@@ -101,44 +100,3 @@ task 'unused', (options) ->
         console.log count
       error: (error) ->
         console.log error
-
-
-task 'upload', 'upload', (options) ->
-  fs.readFile options.arguments[0], (err, content) ->
-    content = content.toString()
-    lines = content.split '\r\n'
-    CarOwner = Parse.Object.extend("CarOwner")
-    
-    objects = []
-    for line, i in lines
-      values = line.split ','
-      #[ '川R7A521', '许德祝', '15984858028', '南充', '8', '9', '10', '2012' ]
-      object =
-        car_number: values[0]
-        name: values[1]
-        mobile: values[2]
-        area: values[3]
-        price: Number(values[4])
-        first_month: Number(values[5])
-        first_day: Number(values[6])
-        first_year: Number(values[7])
-      objects.push object
-    
-    pop = ->
-      object = objects.pop()
-      return if not object
-      owner = new CarOwner()
-      index = i
-      owner.save object,
-        success: (obj) ->
-          console.log obj.id
-          pop()
-        
-        error: (object, error) ->
-          console.log error, object
-          console.log "error on line #{index} #{error}"
-          pop()
-    
-    threads = 4
-    for i in [0...threads]
-      pop()
