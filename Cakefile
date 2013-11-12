@@ -50,15 +50,27 @@ login = (cb)->
       console.log error
 
 task 'reset', (options) ->
-  login ->
-    new Parse.Query("CarOwner").startsWith('track', 'tracked by').find
+  reset = (cb) ->
+    new Parse.Query("CarOwner2").startsWith('track', 'track').find
       success: (results) ->
         results.forEach (result) ->
           result.unset('track')
           result.save(null)
-        console.log results.length
+        cb? results.length
       error: (error) ->
         console.error error
+        cb? 0
+  login ->
+    total = 0
+    resetLoop = ->
+      reset (num) ->
+        console.log num
+        total += num
+        if num is 100
+          resetLoop()
+        else
+          console.log total
+    resetLoop()
 
 task 'used', (options) ->
   login ->
