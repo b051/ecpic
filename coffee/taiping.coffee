@@ -526,8 +526,8 @@ class Taiping extends Task
     entrance = "#{@host}vehicleQuickQuote!landingloadinit.action?channel=tponline-WX-zhongyi&medium=che-eMall-AFFLT-zhongyi-lp-banner"
   
   area: ->
-    city = @owner.get('city')
-    province = @owner.get('province')
+    city = @owner.get('city').trim()
+    province = @owner.get('province').trim()
     levels = Cities[city]
     return if not levels
     

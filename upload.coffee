@@ -36,19 +36,26 @@ upload = (file) ->
     pop = ->
       object = objects.pop()
       return if not object
-      owner = new CarOwner()
-      index = i
-      owner.save object,
+      query = new Parse.Query(CarOwner)
+      query.equalTo 'car_number', object.car_number
+      query.first
         success: (obj) ->
-          console.log obj.id
-          pop()
+          if obj
+            pop()
+            return
+          owner = new CarOwner()
+          index = i
+          owner.save object,
+            success: (obj) ->
+              console.log obj.id
+              pop()
         
-        error: (object, error) ->
-          console.log error, object
-          console.log "error on line #{index} #{error}"
-          pop()
+            error: (object, error) ->
+              console.log error, object
+              console.log "error on line #{index} #{error}"
+              pop()
     
-    threads = 4
+    threads = 10
     for i in [0...threads]
       pop()
 
