@@ -34,30 +34,13 @@ upload = (file) ->
     
     pop = ->
       object = objects.pop()
-      console.log object.car_number
-      
       return if not object
-      
-      save = ->
-        owner = new CarOwner()
-        index = i
-        
-        owner.save object,
-          success: (obj) ->
-            console.log obj.id
-            pop()
-      
-          error: (object, error) ->
-            console.log error, object
-            console.log "error on line #{index} #{error}"
-            pop()
       
       query = new Parse.Query(CarOwner)
       query.find().then (results) ->
         if results.length is 0
-          return save()
+          return Parse.Promise.as('save')
         
-        promises = []
         picked = no
         for result in results
           if result.get('nimpid')
@@ -67,12 +50,29 @@ upload = (file) ->
           picked = results[0]
         
         promises = (result.destroy() for result in results if result isnt picked)
+        if not promises
+          return Parse.Promise.as("skip")
+        
         console.log "removing #{promises.length} duplicated record"
         Parse.Promise.when(promises)
-      .then pop
+      
+      .then (results) ->
+        if results is "save"
+          new CarOwner().save object
+        else if results is "skip"
+          console.log "skip #{object.car_number}"
+        else
+          pop()
+      
+      .then (success) ->
+        if success
+          console.log "saved #{object.car_number}"
+        pop()
+      , (err) ->
+        console.error err
     
     threads = 20
     for i in [0...threads]
       pop()
 
-upload("20000(12.13-12.csv")
+upload("ecpic2.csv")
