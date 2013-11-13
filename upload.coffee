@@ -52,7 +52,7 @@ upload = (file) ->
         if not picked
           picked = results[0]
         
-        promises = (result.destroy() for result in results if result isnt picked)
+        promises = (result.destroy() for result in results when result isnt picked)
         console.log "removing #{promises.length} duplicated record"
         Parse.Promise.when(promises).then ->
           promise
@@ -70,6 +70,7 @@ upload = (file) ->
     threads = 2
     for i in [0...threads]
       pop()
+      continue
 
 
 rl = readline.createInterface
