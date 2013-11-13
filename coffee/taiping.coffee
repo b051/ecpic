@@ -526,13 +526,13 @@ class Taiping extends Task
     entrance = "#{@host}vehicleQuickQuote!landingloadinit.action?channel=tponline-WX-zhongyi&medium=che-eMall-AFFLT-zhongyi-lp-banner"
   
   area: ->
-    city = @owner.get('city').trim()
+    city = @owner.get('city').trim().replace('市', '')
     province = @owner.get('province').trim()
     levels = Cities[city]
     return if not levels
     
     for name, code of Area
-      if city is name or name.search(province) >= 0
+      if city.search(name) >= 0 or name.search(province) >= 0
         bean =
           areaId: code
           automobileLv1Area: levels.parentId

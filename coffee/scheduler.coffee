@@ -90,7 +90,8 @@ class Scheduler
           @next()
         @resetting = no
     
-    @count.scheduled = @config.scheduleCount(new Date())
+    date = new Date()
+    @count.scheduled = @config.scheduleCount date
     notify()
     queries.queryDateCount @config.cls, date, @config.condition, (q, count) =>
       @count.used_real = @count.used = count

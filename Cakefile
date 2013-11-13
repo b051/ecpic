@@ -50,26 +50,30 @@ login = (cb)->
       console.log error
 
 task 'reset', (options) ->
-  reset = (cb) ->
-    new Parse.Query("CarOwner2").startsWith('track', 'track').find
-      success: (results) ->
-        results.forEach (result) ->
-          result.unset('track')
-          result.save(null)
-        cb? results.length
-      error: (error) ->
-        console.error error
-        cb? 0
+  reset = ->
+    query = Parse.Query.or new Parse.Query("CarOwner2").startsWith('track', 'err'),
+      new Parse.Query("CarOwner2").startsWith('track', 'track')
+    query.select().find().then (results) ->
+      promise = Parse.Promise.as(results.length)
+      promises = []
+      results.forEach (result) ->
+        result.unset('track')
+        promises.push result.save()
+      if promises.length
+        Parse.Promise.when(promises).then ->
+          promise
+      else
+        promise
   login ->
     total = 0
     resetLoop = ->
-      reset (num) ->
-        total += num
-        if num is 100
+      reset().then (count) ->
+        total += count
+        if count is 100
           resetLoop()
-        else
-          console.log total
-    resetLoop()
+    
+    resetLoop().then ->
+      console.log "records been reset: #{total}"
 
 task 'used', (options) ->
   login ->
