@@ -33,45 +33,50 @@ upload = (file) ->
         first_year: year
         first_date: new Date(year, month - 1, day)
     
-    pop = ->
+    _upload = (object, cb) ->
+      query = new Parse.Query(CarOwner)
+      errcb = (err) ->
+        console.log err
+        _upload object, cb
+      
+      query.equalTo 'car_number', object.car_number
+      query.select('nimpid').find
+        success: (results) ->
+          if results.length is 0
+            new CarOwner().save(object).then cb, errcb
+            return
+          if results.length is 1
+            console.log "skip #{object.car_number}"
+            cb?()
+            return
+          
+          # remove duplicated ones
+          picked = no
+          for result in results
+            if result.get('nimpid')
+              picked = result
+              break
+          if not picked
+            picked = results[0]
+      
+          promises = (result.destroy() for result in results when result isnt picked)
+          console.log "removing #{promises.length} duplicated record"
+          Parse.Promise.when(promises).then cb, errcb
+        error: errcb
+      return
+    
+    pop = (cb) ->
       object = objects.pop()
       return if not object
-      
-      query = new Parse.Query(CarOwner)
-      query.equalTo 'car_number', object.car_number
-      query.select('nimpid').find().then (results) ->
-        promise = Parse.Promise.as(results.length)
-        if results.length in [0, 1]
-          return promise
-        
-        picked = no
-        for result in results
-          if result.get('nimpid')
-            picked = result
-            break
-        if not picked
-          picked = results[0]
-        
-        promises = (result.destroy() for result in results when result isnt picked)
-        console.log "removing #{promises.length} duplicated record"
-        Parse.Promise.when(promises).then ->
-          promise
-      .then (results) ->
-        if results is 0
-          new CarOwner().save(object)
-        else if results is 1
-          console.log "skip #{object.car_number}"
-        pop()
-        return
-      , (err) ->
-        pop()
-        return
+      _upload object, cb
     
-    threads = 2
+    popL = ->
+      pop popL
+    
+    threads = 8
     for i in [0...threads]
-      pop()
+      popL()
       continue
-
 
 rl = readline.createInterface
   input: process.stdin
