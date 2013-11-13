@@ -113,18 +113,12 @@ class Scheduler
     , resetAfter
     log.info "today's job is done (#{@count.used_real}/#{@count.scheduled}). schedule next start in #{Math.floor(resetAfter / 3600000)}h#{Math.floor((resetAfter % 3600000) / 60000)}m"
   
-  catchUp: ->
+  adjustSpeed: ->
     now = new Date()
     mins = ((now.getUTCHours() + 8) % 24) * 60 + now.getMinutes()
     remain = @count.scheduled - @count.used
-    if mins < @config.start_hour * 60
-      if remain > 0
-        speed = @config.max_speed
-        @ignoreReset = yes
-      else
-        return @next()
-    else
-      @ignoreReset = no
+    
+    if mins >= @config.start_hour * 60
       if @config.hot_hours
         _minOffset = 1440
         _minOffsetHour = 0
@@ -143,10 +137,27 @@ class Scheduler
         if _speed < 0
           _speed = @config.max_speed / @config.speed_factor
       speed = Math.max(_speed * @config.speed_factor, @config.min_speed)
-    if @speed isnt speed
+    else
+      speed = @config.max_speed
+    
+    if speed and @speed isnt speed
       @speed = speed
-      log.info "adjust speed to #{@speed} per min, #{remain}/#{@count.scheduled} remaining for today"
+      log.info "speed = #{Math.round(@speed * 10) / 10} / 60 sec"
       @startPicking()
+  
+  catchUp: ->
+    now = new Date()
+    mins = ((now.getUTCHours() + 8) % 24) * 60 + now.getMinutes()
+    remain = @count.scheduled - @count.used
+    if mins < @config.start_hour * 60
+      if remain > 0
+        @ignoreReset = yes
+      else
+        return @next()
+    else
+      @ignoreReset = no
+    @adjustSpeed()
+    log.info "#{remain}/#{@count.scheduled} remaining for today"
   
   startPicking: (speed) ->
     clearInterval @clock
@@ -176,5 +187,7 @@ class Scheduler
         return if @ignoreReset is yes
         if @count.used - @count.used_real > @config.reset_every_n_pick or @count.used >= @count.scheduled
           @reset()
+        else
+          @adjustSpeed()
 
 module.exports = Scheduler
