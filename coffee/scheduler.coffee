@@ -130,7 +130,6 @@ class Scheduler
         topBar = remain / @config.hot_hours.length / (2 * Math.PI)
         ratio = (Math.cos(Math.max(Math.min(_minOffset / 60, 1), -1) * Math.PI) + 1) / 2
         _speed = topBar * ratio
-        console.log _speed
       else
         timeLeft = @config.end_hour * 60 - mins
         _speed = remain / timeLeft

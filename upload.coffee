@@ -58,14 +58,16 @@ upload = (file) ->
           promise
       .then (results) ->
         if results is 0
-          new CarOwner().save(object).then pop, pop
+          new CarOwner().save(object)
         else if results is 1
           console.log "skip #{object.car_number}"
-          pop()
-        else
-          pop()
+        pop()
+        return
+      , (err) ->
+        pop()
+        return
     
-    threads = 5
+    threads = 2
     for i in [0...threads]
       pop()
 
