@@ -43,11 +43,14 @@ upload = (file) ->
       query.select('nimpid').find
         success: (results) ->
           if results.length is 0
+            console.log "save #{object.car_number}"
             new CarOwner().save(object).then cb, errcb
             return
           if results.length is 1
-            console.log "skip #{object.car_number}"
-            cb?()
+            console.log "update #{object.car_number}"
+            results[0].save(object).then cb, errcb
+            # console.log "skip #{object.car_number}"
+            # cb?()
             return
           
           # remove duplicated ones
@@ -60,13 +63,14 @@ upload = (file) ->
             picked = results[0]
       
           promises = (result.destroy() for result in results when result isnt picked)
+          promises.push (picked.save(object))
           console.log "removing #{promises.length} duplicated record"
           Parse.Promise.when(promises).then cb, errcb
         error: errcb
       return
     
     pop = (cb) ->
-      object = objects.pop()
+      object = objects.shift()
       return if not object
       _upload object, cb
     
