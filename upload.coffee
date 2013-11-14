@@ -3,6 +3,8 @@
 fs = require 'fs'
 readline = require 'readline'
 
+UPDATE = 1
+
 upload = (file) ->
   fs.readFile file, (err, content) ->
     content = content.toString()
@@ -47,10 +49,12 @@ upload = (file) ->
             new CarOwner().save(object).then cb, errcb
             return
           if results.length is 1
-            console.log "update #{object.car_number}"
-            results[0].save(object).then cb, errcb
-            # console.log "skip #{object.car_number}"
-            # cb?()
+            if UPDATE
+              console.log "update #{object.car_number}"
+              results[0].save(object).then cb, errcb
+            else
+              console.log "skip #{object.car_number}"
+              cb?()
             return
           
           # remove duplicated ones
@@ -63,7 +67,9 @@ upload = (file) ->
             picked = results[0]
       
           promises = (result.destroy() for result in results when result isnt picked)
-          promises.push (picked.save(object))
+          if UPDATE
+            promises.push (picked.save(object))
+          
           console.log "removing #{promises.length} duplicated record"
           Parse.Promise.when(promises).then cb, errcb
         error: errcb
