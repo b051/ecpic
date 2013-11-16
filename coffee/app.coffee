@@ -80,10 +80,10 @@ server.listen port, ->
     task: require './taiping'
     end_hour: 22
     start_hour: 8
-    hot_hours: [10, 13, 16, 21]
+    # hot_hours: [10, 13, 16, 21]
     min_speed: 0.1
     speed_factor: 1
     cls: 'CarOwner2'
-    scheduleCount: -> 1500
+    scheduleCount: -> 500
 
 #endifapp.listen()
