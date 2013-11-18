@@ -97,7 +97,7 @@ task 'tracked', (options) ->
 
 task 'unused', (options) ->
   login ->
-    query = new Parse.Query("CarOwner")
+    query = new Parse.Query("CarOwner2")
     query.doesNotExist('used')
     query.count
       success: (count) ->
